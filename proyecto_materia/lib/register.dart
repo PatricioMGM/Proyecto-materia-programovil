@@ -1,49 +1,71 @@
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _correoController = TextEditingController();
+  final _contrasenaController = TextEditingController();
+
+  @override
+  void dispose() {
+    _correoController.dispose();
+    _contrasenaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrarse'),
+        title: const Text('Registro'),
       ),
-      body: Center(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 40),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'Registrarse',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            children: <Widget>[
+              TextFormField(
+                controller: _correoController,
+                decoration: const InputDecoration(labelText: 'Correo'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa tu correo';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  labelText: 'Usuario',
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  labelText: 'Contraseña',
-                ),
+              TextFormField(
+                controller: _contrasenaController,
+                decoration: const InputDecoration(labelText: 'Contraseña'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa tu contraseña';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // Aquí puedes manejar la lógica de registro
+                      print('Correo: ${_correoController.text}');
+                      print('Contraseña: ${_contrasenaController.text}');
+                    }
                   },
-                  child: const Text('Registrarse'),
+                  child: const Text('Registrar'),
                 ),
               ),
             ],
